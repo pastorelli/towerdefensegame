@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour {
 
     [Header("Attributes")]
     public float speed = 70f;
+    public float explosionRadius = 0f;
 
     [Header("Unity Setup Fields")]
     public GameObject impactEffect;
@@ -34,13 +35,41 @@ public class Bullet : MonoBehaviour {
         }
 
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+        transform.LookAt(target);
+
 	}
 
     private void HitTarget()
     {
         GameObject effectIns = (GameObject) Instantiate(impactEffect, transform.position, transform.rotation);
-        Destroy(effectIns, 2f);
+        Destroy(effectIns, 5f);
+
+        if (explosionRadius > 0f)
+        {
+            Explode();
+        }
+        else
+        {
+            Damage(target);
+        }
 
         Destroy(gameObject);
+    }
+
+    private void Explode()
+    {
+        Collider[] colliders =  Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.tag == "Enemy")
+            {
+                Damage(collider.transform);
+            }
+        }
+    }
+
+    private void Damage(Transform enemy)
+    {
+        Destroy(enemy.gameObject);
     }
 }

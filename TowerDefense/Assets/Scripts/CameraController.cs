@@ -4,7 +4,7 @@ public class CameraController : MonoBehaviour {
 
     public float panSpeed = 30f;
     public float panBorderThikcness = 10f;
-    public float scrollSpeed;
+    public float scrollSpeed = 5f;
     public float minY = 10f;
     public float maxY = 80f;
 
